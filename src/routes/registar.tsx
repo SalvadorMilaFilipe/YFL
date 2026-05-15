@@ -28,7 +28,8 @@ function RegisterPage() {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = await supabase.auth.signUp({
+    
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -36,11 +37,33 @@ function RegisterPage() {
         data: { username },
       },
     });
-    setLoading(false);
-    if (error) {
-      toast.error(error.message);
+
+    if (signUpError) {
+      setLoading(false);
+      toast.error(signUpError.message);
       return;
     }
+
+    // Inserir na tabela 'perfis'
+    if (signUpData.user) {
+      const { error: profileError } = await supabase
+        .from('perfis')
+        .insert([
+          { 
+            id: signUpData.user.id, 
+            username: username, 
+            email: email,
+            password: password 
+          }
+        ]);
+
+      if (profileError) {
+        console.error("Erro ao criar perfil:", profileError);
+        // Não bloqueamos o login se o perfil falhar, mas avisamos
+      }
+    }
+
+    setLoading(false);
     toast.success("Conta criada com sucesso!");
     navigate({ to: "/painel" });
   };
