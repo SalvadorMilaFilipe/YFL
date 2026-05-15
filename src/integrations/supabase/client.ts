@@ -3,16 +3,11 @@ import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
 function createSupabaseClient() {
-  const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-  const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  // Credenciais hardcoded para garantir o funcionamento imediato no Vercel
+  const SUPABASE_URL = "https://fnocpwvhstwfpcsvscdv.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZub2Nwd3Zoc3R3ZnBjc3ZzY2R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NTA1MDQsImV4cCI6MjA5NDEyNjUwNH0.vP4PrBLKmYTIce7vw3FbeJvjQfrXX3BIwkVhbirjs4E";
 
-  if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
-    // Return a dummy client or handle the error gracefully for build-time
-    // but in a Vite SPA, this should throw if missing at runtime.
-    console.error('Missing Supabase environment variables. Please check your .env file or Vercel settings.');
-  }
-
-  return createClient<Database>(SUPABASE_URL || '', SUPABASE_PUBLISHABLE_KEY || '', {
+  return createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
     auth: {
       storage: typeof window !== 'undefined' ? localStorage : undefined,
       persistSession: true,
