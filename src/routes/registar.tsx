@@ -71,7 +71,7 @@ function RegisterPage() {
             </Button>
             <p className="text-center text-sm text-muted-foreground">
               Já tens conta?{" "}
-              <Link to="/entrar" className="font-medium text-primary hover:underline">
+              <Link to="/" className="font-medium text-primary hover:underline">
                 Entra aqui
               </Link>
             </p>
