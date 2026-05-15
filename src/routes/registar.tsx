@@ -29,12 +29,19 @@ function RegisterPage() {
     e.preventDefault();
     setLoading(true);
     
+    // Capturar valores atuais para evitar perdas de estado
+    const currentEmail = email;
+    const currentPassword = password;
+    const currentUsername = username;
+
+    console.log("Iniciando registo para:", currentEmail);
+
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
+      email: currentEmail,
+      password: currentPassword,
       options: {
         emailRedirectTo: `${window.location.origin}/painel`,
-        data: { username },
+        data: { username: currentUsername },
       },
     });
 
@@ -46,17 +53,21 @@ function RegisterPage() {
 
     // Inserir na tabela 'perfis'
     if (signUpData.user) {
+      console.log("Inserindo na tabela perfis...");
       const { error: profileError } = await supabase
         .from('perfis')
         .insert({ 
           id: signUpData.user.id, 
-          username: username, 
-          email: email,
-          password: password 
+          username: currentUsername, 
+          email: currentEmail,
+          password: currentPassword 
         } as any);
 
       if (profileError) {
         console.error("Erro ao criar perfil:", profileError);
+        toast.error("Erro ao gravar dados na tabela perfis.");
+      } else {
+        console.log("Perfil criado com sucesso!");
       }
     }
 
