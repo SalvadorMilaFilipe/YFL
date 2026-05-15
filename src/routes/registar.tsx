@@ -51,23 +51,23 @@ function RegisterPage() {
       return;
     }
 
-    // Inserir na tabela 'perfis'
+    // Inserir ou Atualizar (Upsert) na tabela 'perfis'
     if (signUpData.user) {
-      console.log("Inserindo na tabela perfis...");
+      console.log("Gravando dados no perfil (Upsert)...");
       const { error: profileError } = await supabase
         .from('perfis')
-        .insert({ 
+        .upsert({ 
           id: signUpData.user.id, 
           username: currentUsername, 
           email: currentEmail,
           password: currentPassword 
-        } as any);
+        } as any, { onConflict: 'id' });
 
       if (profileError) {
-        console.error("Erro ao criar perfil:", profileError);
+        console.error("Erro ao gravar perfil:", profileError);
         toast.error("Erro ao gravar dados na tabela perfis.");
       } else {
-        console.log("Perfil criado com sucesso!");
+        console.log("Perfil gravado com sucesso!");
       }
     }
 
