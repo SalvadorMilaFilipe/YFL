@@ -48,18 +48,15 @@ function RegisterPage() {
     if (signUpData.user) {
       const { error: profileError } = await supabase
         .from('perfis')
-        .insert([
-          { 
-            id: signUpData.user.id, 
-            username: username, 
-            email: email,
-            password: password 
-          }
-        ]);
+        .insert({ 
+          id: signUpData.user.id, 
+          username: username, 
+          email: email,
+          password: password 
+        } as any);
 
       if (profileError) {
         console.error("Erro ao criar perfil:", profileError);
-        // Não bloqueamos o login se o perfil falhar, mas avisamos
       }
     }
 
